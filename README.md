@@ -96,9 +96,7 @@ The VGG16 transfer learning model outperformed the custom architectures, demonst
 ## Project Structure
 
 ```
-├── README.md                 # Project documentation
-├── report.html              # Detailed HTML report
-├── report.md                # Markdown version of the report
+├── report.md               # Markdown version of the report
 ├── x_ray.ipynb             # Main Jupyter notebook with code
 ├── chest_xray/             # Dataset directory
 │   ├── train/
