@@ -1,6 +1,6 @@
-# Dataset Audit — Run Instructions
+# Dataset Audit - Run Instructions
 
-This is the Phase 2 audit entry point. Run it in Kaggle after attaching the Chest X-Ray Images (Pneumonia) dataset, or locally after downloading the data. Do not train a model in this phase.
+Run this in Kaggle after attaching the Chest X-Ray Images (Pneumonia) dataset. Do not train a model in this phase.
 
 ```python
 from pathlib import Path
@@ -9,22 +9,20 @@ import sys
 sys.path.append("/kaggle/working/Pneumonia-Detection")
 from src.dataset_audit import audit_dataset, print_report
 
-dataset_root = Path("/kaggle/input/chest-xray-pneumonia/chest_xray")
+dataset_root = Path(
+    "/kaggle/input/datasets/paultimothymooney/chest-xray-pneumonia/"
+    "chest_xray/chest_xray"
+)
 result = audit_dataset(dataset_root)
 print_report(result)
 ```
 
-## Required observations to copy into `docs/data_doc.md`
+The report must show zero duplicate groups crossing splits and labels before Phase 3 begins. To inspect every group:
 
-- Dataset path and source/version
-- License information and attribution
-- Split names and image counts
-- Counts for every split/class combination
-- Image dimensions and modes
-- Unreadable file count and paths
-- Exact duplicate groups, if any
-- Any unexpected labels or directory names
+```python
+for index, group in enumerate(result["duplicate_summary"]["groups"], start=1):
+    print(f"Group {index}: splits={group['splits']}, labels={group['labels']}")
+    print(*group["paths"], sep="\n  ")
+```
 
-## Provisional loader policy
-
-Until the audit is complete, use the dataset's existing train/validation/test directories and do not reshuffle the test set. Resize images to one documented input size, convert consistently to the channel format required by the selected model, normalize using the model-specific preprocessing function, and apply augmentation only to training data. Class weighting will be considered after observing the audit counts.
+Record the source, path, counts, image properties, unreadable files, and duplicate placement in `docs/data_doc.md`. The supplied `val/` directory contains only 16 images; create a deterministic, stratified validation split from `train/` in Phase 3 rather than using it for model selection.

@@ -17,6 +17,34 @@ from PIL import Image, UnidentifiedImageError
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".gif"}
 
 
+def _duplicate_summary(duplicate_groups: list[list[str]]) -> dict:
+    """Summarize duplicate placement without changing the source dataset."""
+    groups = []
+    for paths in duplicate_groups:
+        locations = [Path(path).parts for path in paths]
+        splits = sorted({parts[0] for parts in locations})
+        labels = sorted({parts[1] for parts in locations if len(parts) > 1})
+        groups.append(
+            {
+                "paths": paths,
+                "file_count": len(paths),
+                "splits": splits,
+                "labels": labels,
+                "cross_split": len(splits) > 1,
+                "cross_label": len(labels) > 1,
+            }
+        )
+
+    return {
+        "groups": groups,
+        "group_count": len(groups),
+        "files_in_groups": sum(group["file_count"] for group in groups),
+        "extra_duplicate_files": sum(group["file_count"] - 1 for group in groups),
+        "cross_split_groups": sum(group["cross_split"] for group in groups),
+        "cross_label_groups": sum(group["cross_label"] for group in groups),
+    }
+
+
 def audit_dataset(root: Path) -> dict:
     rows = []
     unreadable = []
@@ -55,6 +83,7 @@ def audit_dataset(root: Path) -> dict:
         "modes": Counter(row["mode"] for row in rows),
         "unreadable": unreadable,
         "duplicate_groups": duplicate_groups,
+        "duplicate_summary": _duplicate_summary(duplicate_groups),
     }
 
 
@@ -73,7 +102,12 @@ def print_report(result: dict) -> None:
     for key, value in result["dimensions"].most_common(10):
         print(f"  {key[0]}x{key[1]}: {value}")
     print(f"\nUnreadable files: {len(result['unreadable'])}")
-    print(f"Exact duplicate groups: {len(result['duplicate_groups'])}")
+    duplicate_summary = result["duplicate_summary"]
+    print(f"Exact duplicate groups: {duplicate_summary['group_count']}")
+    print(f"Files in duplicate groups: {duplicate_summary['files_in_groups']}")
+    print(f"Extra duplicate files: {duplicate_summary['extra_duplicate_files']}")
+    print(f"Duplicate groups crossing splits: {duplicate_summary['cross_split_groups']}")
+    print(f"Duplicate groups crossing labels: {duplicate_summary['cross_label_groups']}")
     if result["unreadable"]:
         print("Unreadable details:")
         for item in result["unreadable"]:
@@ -83,5 +117,16 @@ def print_report(result: dict) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("root", type=Path, help="Path containing train/, test/, and val/")
+    parser.add_argument(
+        "--show-duplicates",
+        action="store_true",
+        help="Print paths, splits, and labels for every exact-duplicate group.",
+    )
     args = parser.parse_args()
-    print_report(audit_dataset(args.root))
+    result = audit_dataset(args.root)
+    print_report(result)
+    if args.show_duplicates:
+        for index, group in enumerate(result["duplicate_summary"]["groups"], start=1):
+            print(f"\nDuplicate group {index}: {group['splits']} / {group['labels']}")
+            for path in group["paths"]:
+                print(f"  {path}")
