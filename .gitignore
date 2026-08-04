@@ -1,12 +1,38 @@
-chest_xray
-.idea
-debug_log.md
-eval.md
-experiment.md
-learnings.md
-model_card.md
-project_context.md
-tasks.md
-data_doc.md
-experiment_log.md
-dev_system_guide.md
+# Dataset and derived local data
+/chest_xray/
+/data/
+
+# Trained-model artifacts and training outputs
+/models/*
+!/models/.gitkeep
+/outputs/
+/checkpoints/
+*.keras
+*.h5
+*.hdf5
+*.weights.h5
+*.ckpt
+*.onnx
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Secrets and Kaggle credentials
+.env
+.env.*
+kaggle.json
+
+# IDE and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Personal/local-only notes
+docs/opencode.md
+docs/dev_system_guide.md
