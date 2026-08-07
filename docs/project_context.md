@@ -21,3 +21,7 @@ The objective is to rebuild the project as a reproducible medical-imaging study 
 ## Success conditions
 
 The project should have reproducible data handling, a defensible validation protocol, multiple evaluation metrics, documented experiments, error analysis, and visual explanations for selected predictions.
+
+## Current focus
+
+Close Phase 3 by adding the cleaned Kaggle baseline notebook and recording one fixed-threshold (0.65) test evaluation. Model improvements and transfer learning remain out of scope until the baseline is documented.

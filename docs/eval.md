@@ -14,7 +14,19 @@ The image is the current unit of evaluation. The official test split remains unt
 - ROC-AUC: ranking performance across thresholds, with limitations noted.
 - Confusion matrix: explicit false-positive and false-negative counts.
 
-The positive class must be explicitly defined as `PNEUMONIA`, and the decision threshold must be recorded.
+The positive class is `PNEUMONIA`, and every result must state its decision threshold.
+
+## Operating-threshold policy
+
+For the custom-CNN baseline, choose the highest validation-derived threshold that maintains sensitivity of at least 95%. The selected threshold is 0.65, based on the validation set only:
+
+- Sensitivity: 95.71%
+- Specificity: 71.64%
+- Precision: 90.73%
+- False negatives: 25
+- False positives: 57
+
+This threshold is a portfolio-study operating point, not a clinical recommendation. The next test evaluation applies it once without further adjustment.
 
 ## Selection policy
 
