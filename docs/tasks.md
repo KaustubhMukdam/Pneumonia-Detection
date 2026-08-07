@@ -21,7 +21,7 @@
 - [x] Create a deterministic, duplicate-safe, stratified validation split from train data.
 - [x] Define the initial evaluation protocol and validation-only threshold policy.
 - [x] Record training curves, validation findings, and the exploratory test result at threshold 0.50.
-- [ ] Add the cleaned Kaggle notebook as `notebooks/02_baseline_cnn.ipynb`.
+- [x] Add the cleaned Kaggle notebook as `notebooks/02_baseline_cnn.ipynb`.
 - [x] Evaluate the selected threshold (0.65) on the official test set and record those metrics.
 - [x] Complete the Phase 3 baseline summary in the experiment log and model card.
 
