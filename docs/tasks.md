@@ -27,8 +27,11 @@
 
 ## Phase 4 - Transfer learning
 
-- [ ] Train candidate pretrained model(s) with frozen backbone.
-- [ ] Compare against the baseline.
+- [ ] Train EfficientNetB0 with a frozen ImageNet backbone.
+- [ ] Train DenseNet121 with a frozen ImageNet backbone.
+- [ ] Compare custom CNN, EfficientNetB0, and DenseNet121 using validation results only.
+- [ ] Select an operating threshold on validation data for the chosen transfer-learning model.
+- [ ] Evaluate only the chosen transfer-learning model once on the official test split.
 - [ ] Fine-tune only with a documented hypothesis.
 
 ## Phase 5 - Analysis

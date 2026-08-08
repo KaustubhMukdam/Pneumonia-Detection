@@ -28,5 +28,6 @@ Reports, model card, and documented conclusions
 
 1. Historical models as reference only.
 2. Clean simple CNN baseline.
-3. One or more pretrained candidates, initially MobileNetV2 and/or EfficientNetB0.
-4. Fine-tuning of the strongest candidate only if justified by validation results.
+3. Frozen ImageNet-pretrained EfficientNetB0 and DenseNet121 candidates, evaluated with the baseline's same data protocol.
+4. Select one candidate using validation results and a validation-derived operating threshold.
+5. Fine-tune the selected candidate only if validation evidence justifies it.

@@ -24,4 +24,4 @@ The project should have reproducible data handling, a defensible validation prot
 
 ## Current focus
 
-Close Phase 3 by adding the cleaned Kaggle baseline notebook and recording one fixed-threshold (0.65) test evaluation. Model improvements and transfer learning remain out of scope until the baseline is documented.
+Phase 4 transfer learning. Train frozen EfficientNetB0 and DenseNet121 candidates using the baseline's duplicate-safe split, validation protocol, and documentation discipline. Select models and thresholds using validation data only.
