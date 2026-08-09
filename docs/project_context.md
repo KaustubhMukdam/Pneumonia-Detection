@@ -24,4 +24,4 @@ The project should have reproducible data handling, a defensible validation prot
 
 ## Current focus
 
-Phase 4 transfer learning. Train frozen EfficientNetB0 and DenseNet121 candidates using the baseline's duplicate-safe split, validation protocol, and documentation discipline. Select models and thresholds using validation data only.
+Phase 4 transfer learning. Frozen EfficientNetB0 is the current leading validation candidate. Train frozen DenseNet121 with the same duplicate-safe split and validation protocol, then select models and thresholds using validation data only.
