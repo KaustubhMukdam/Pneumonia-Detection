@@ -36,6 +36,21 @@ Append one entry per material run. Do not overwrite old results.
 - Limitation: the test set was inspected at threshold 0.50 before the threshold policy was finalized. The threshold-0.65 test result is therefore non-blinded and must not be used to tune future experiments.
 - Next decision: add the cleaned notebook to the repository and close Phase 3. Future model selection uses validation only; transfer-learning candidates will use the same data protocol.
 
+## Run 003 - Frozen EfficientNetB0 (2026-08-10)
+
+- Hypothesis: ImageNet-pretrained EfficientNetB0 features can improve discriminative performance and reduce the baseline CNN's false-positive tendency without fine-tuning the backbone.
+- Data: the same duplicate-safe, stratified train/validation split as Run 002; seed 42; 4,432 training images and 784 validation images (201 NORMAL / 583 PNEUMONIA).
+- Input: 224 x 224 RGB. Pixels remained in the [0, 255] range because Keras EfficientNetB0 contains its own rescaling layer.
+- Augmentation: training-only small rotation, translation, and zoom; no flips or intensity transformations.
+- Architecture: ImageNet-pretrained EfficientNetB0 backbone with global average pooling, frozen throughout training; dropout 0.30 and a sigmoid binary-classification head. Total parameters: 4,050,852; trainable parameters: 1,281.
+- Training: Adam learning rate 3e-4, batch size 32, up to 20 epochs, binary cross-entropy, no class weighting. Validation-loss checkpointing and early stopping were enabled.
+- Best checkpoint: epoch 20. Validation loss 0.1385, validation accuracy 0.9413, validation ROC-AUC 0.9853.
+- Default validation threshold (0.50): accuracy 0.9413, precision 0.9621, sensitivity 0.9588, specificity 0.8905, F1 0.9605; TN 179, FP 22, FN 24, TP 559.
+- Threshold analysis: threshold 0.57 was selected by the policy of highest threshold retaining sensitivity of at least 95%. It gave validation sensitivity 0.9503, specificity 0.9154, precision 0.9702, F1 0.9601; TN 184, FP 17, FN 29, TP 554.
+- Interpretation: no observable overfitting in this frozen-stage run. Validation loss declined throughout training, and training/validation accuracy remained close. The validation result substantially exceeds the custom CNN baseline, but it is internal validation only.
+- Limitation: no official test evaluation was run. Do not tune or evaluate this candidate on test until comparison with DenseNet121 and any justified fine-tuning is complete. Random image-level splitting may also remain optimistic if multiple images from a patient occur in both train and validation.
+- Next decision: train frozen DenseNet121 with the same protocol and compare candidates using validation data only.
+
 ## Run template
 
 ### Run ID / date
