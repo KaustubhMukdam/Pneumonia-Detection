@@ -51,6 +51,22 @@ Append one entry per material run. Do not overwrite old results.
 - Limitation: no official test evaluation was run. Do not tune or evaluate this candidate on test until comparison with DenseNet121 and any justified fine-tuning is complete. Random image-level splitting may also remain optimistic if multiple images from a patient occur in both train and validation.
 - Next decision: train frozen DenseNet121 with the same protocol and compare candidates using validation data only.
 
+## Run 004 - Frozen DenseNet121 (2026-08-11)
+
+- Hypothesis: ImageNet-pretrained DenseNet121 features may provide a strong alternative to EfficientNetB0 for chest-X-ray classification because dense feature reuse can preserve fine-grained visual information while the backbone remains frozen.
+- Data: the same duplicate-safe, stratified train/validation split as Runs 002 and 003; seed 42; 4,432 training images and 784 validation images (201 NORMAL / 583 PNEUMONIA). The official test split was not used.
+- Input: 224 x 224 RGB images. DenseNet preprocessing was applied using the Keras DenseNet preprocessing convention.
+- Augmentation: training-only small rotation, translation, and zoom; no flips or intensity transformations.
+- Architecture: ImageNet-pretrained DenseNet121 with global average pooling, frozen throughout training; dropout 0.30 and a single sigmoid classification head. Total parameters: 7,038,529; trainable parameters: 1,025.
+- Training: Adam learning rate 3e-4, batch size 32, up to 20 epochs, binary cross-entropy, no class weighting. Validation-loss checkpointing and early stopping were enabled.
+- Best checkpoint: epoch 20. Validation loss 0.1311, validation accuracy 0.9541, validation ROC-AUC 0.9858.
+- Verified validation result at threshold 0.50: accuracy 0.9541, precision 0.9691, sensitivity 0.9691, specificity 0.9104, F1 0.9691; TN 183, FP 18, FN 18, TP 565.
+- Verified validation result at threshold 0.67: accuracy 0.9515, precision 0.9840, sensitivity 0.9503, specificity 0.9552, F1 0.9668; TN 192, FP 9, FN 29, TP 554.
+- Threshold decision: the existing portfolio policy selects 0.67 because it is the highest tested threshold retaining sensitivity of at least 95%. Threshold 0.50 is retained as a lower-threshold alternative because it produces fewer false negatives. Neither is a clinical recommendation.
+- Interpretation: the training curves do not show the same overfitting pattern as the custom CNN. Training and validation loss both decreased, and validation accuracy remained close to or above training accuracy; augmentation and dropout make training metrics harder to optimize. The near-perfect validation result is promising but may still be optimistic because patient-level separation has not been verified.
+- Reporting correction: the initial summary incorrectly displayed several metrics as 1.00 despite reporting 36 validation errors. The metrics above were recomputed directly from the validation labels, probabilities, threshold, and confusion matrix.
+- Next decision: compare the three models on validation results only, then select one candidate and one threshold before performing a single official-test evaluation.
+
 ## Run template
 
 ### Run ID / date

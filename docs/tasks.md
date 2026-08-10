@@ -29,7 +29,8 @@
 
 - [x] Train EfficientNetB0 with a frozen ImageNet backbone.
 - [x] Add the EfficientNetB0 notebook and record validation-only findings.
-- [ ] Train DenseNet121 with a frozen ImageNet backbone.
+- [x] Train DenseNet121 with a frozen ImageNet backbone.
+- [x] Verify DenseNet121 metrics after correcting the inconsistent first report.
 - [ ] Compare custom CNN, EfficientNetB0, and DenseNet121 using validation results only.
 - [ ] Select an operating threshold on validation data for the chosen transfer-learning model.
 - [ ] Evaluate only the chosen transfer-learning model once on the official test split.

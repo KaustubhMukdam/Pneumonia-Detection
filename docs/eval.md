@@ -28,6 +28,23 @@ For the custom-CNN baseline, choose the highest validation-derived threshold tha
 
 This threshold is a portfolio-study operating point, not a clinical recommendation. The next test evaluation applies it once without further adjustment.
 
+For DenseNet121, the verified validation operating points are:
+
+- Threshold 0.50: sensitivity 96.91%, specificity 91.04%, precision 96.91%, F1 96.91%, FN 18, FP 18.
+- Threshold 0.67: sensitivity 95.03%, specificity 95.52%, precision 98.40%, F1 96.68%, FN 29, FP 9.
+
+Under the current policy, threshold 0.67 is the policy-selected DenseNet121 threshold because it is the highest tested threshold retaining sensitivity of at least 95%. Threshold 0.50 remains an explicitly reported alternative with fewer false negatives. The final model and threshold must be selected before the official test is opened.
+
 ## Selection policy
 
 The best model is not automatically the one with the highest accuracy. We will consider recall, specificity, calibration/threshold behavior, resource cost, and error patterns together. Final results must note that six exact duplicate pairs remain in the official test split. No model will be described as clinically validated.
+
+## Candidate validation summary
+
+| Candidate | Validation ROC-AUC | Validation operating point | Sensitivity | Specificity | F1 |
+|---|---:|---:|---:|---:|---:|
+| Custom CNN | 0.9412 | threshold 0.65 | 95.71% | 71.64% | 93.16% |
+| EfficientNetB0 frozen | 0.9853 | threshold 0.57 | 95.03% | 91.54% | 96.01% |
+| DenseNet121 frozen | 0.9858 | threshold 0.67 | 95.03% | 95.52% | 96.68% |
+
+This table is for validation-based selection only. It does not establish which model will generalize best to the untouched official test split.
