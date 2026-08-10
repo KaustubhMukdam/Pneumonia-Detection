@@ -2,7 +2,7 @@
 
 ## Model status
 
-The custom-CNN baseline has been trained and evaluated. Frozen EfficientNetB0 is the leading validation candidate, but it is not the final selected v2 model and has not been evaluated on the official test split.
+The custom-CNN baseline has been trained and evaluated. Frozen EfficientNetB0 and frozen DenseNet121 have been trained under the same validation protocol. DenseNet121 is currently the leading validation candidate, but no transfer-learning model has been evaluated on the official test split and no final v2 model has been selected.
 
 ## Intended use
 
@@ -32,6 +32,17 @@ The project uses a public Kaggle chest-X-ray dataset with `NORMAL` and `PNEUMONI
 - Best checkpoint: epoch 20, validation loss 0.1385, validation accuracy 94.13%, validation ROC-AUC 98.53%.
 - Selected validation threshold: 0.57, retaining 95.03% sensitivity with 91.54% specificity.
 
+## Frozen DenseNet121 candidate
+
+- Backbone: ImageNet-pretrained DenseNet121, frozen throughout training.
+- Head: global average pooling, dropout 0.30, and a single sigmoid output; 1,025 trainable parameters out of 7,038,529 total.
+- Input: 224 x 224 RGB with the Keras DenseNet preprocessing convention.
+- Training: seed 42, Adam at 3e-4, batch size 32, early stopping and checkpointing by validation loss, no class weights.
+- Best checkpoint: epoch 20, validation loss 0.1311, validation accuracy 95.41%, validation ROC-AUC 98.58%.
+- Validation threshold 0.50: sensitivity 96.91%, specificity 91.04%, precision 96.91%, F1-score 96.91%; TN 183, FP 18, FN 18, TP 565.
+- Policy-selected validation threshold 0.67: sensitivity 95.03%, specificity 95.52%, precision 98.40%, F1-score 96.68%; TN 192, FP 9, FN 29, TP 554.
+- Threshold 0.67 follows the existing rule of selecting the highest tested threshold that retains sensitivity of at least 95%. Threshold 0.50 remains a documented alternative with fewer false negatives.
+
 ## Known limitations
 
 The custom CNN overfit after its best validation epoch. Frozen EfficientNetB0 did not show the same pattern, but its high validation scores may still be optimistic because the project has not verified patient-level separation. The official test set includes six exact duplicate pairs. Grad-CAM is not yet implemented and no external validation exists.
@@ -50,6 +61,8 @@ Official test split, `PNEUMONIA` positive class, threshold 0.65:
 
 The threshold came from validation data, but the test split had already been inspected at threshold 0.50. This result is non-blinded and must not be used to tune later models.
 
-## EfficientNetB0 evaluation status
+## Transfer-learning evaluation status
 
-No official test metrics are recorded for EfficientNetB0. Its validation results are for candidate comparison only and must not be presented as final performance.
+No official test metrics are recorded for EfficientNetB0 or DenseNet121. Their validation results are for candidate comparison only and must not be presented as final performance.
+
+The initial DenseNet report contained impossible perfect metrics despite a confusion matrix with 36 errors. Those values were discarded and recomputed directly from validation probabilities and labels.

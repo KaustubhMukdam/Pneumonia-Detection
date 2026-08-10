@@ -19,6 +19,15 @@
 - No overfitting signal appeared in this run because validation loss decreased through epoch 20 and stayed close to training loss. The lower validation loss is compatible with training-time augmentation and dropout.
 - A validation ROC-AUC of 0.9853 is promising but not final evidence. The validation split is derived from the same source dataset, and the official test set must remain unused until transfer-learning candidates are selected.
 
+## 2026-08-11 - Frozen DenseNet121
+
+- Frozen DenseNet121 reached validation ROC-AUC 0.9858, closely matching EfficientNetB0 at 0.9853. The small AUC difference is not enough to decide the model by itself.
+- At the policy-selected threshold of 0.67, DenseNet121 retained 95.03% sensitivity and improved validation specificity to 95.52%, with 29 false negatives and 9 false positives.
+- Threshold 0.50 produced fewer false negatives (18 versus 29) but more false positives (18 versus 9). Threshold choice is therefore a documented trade-off, not a purely mathematical “best” value.
+- A first metric printout claimed perfect validation performance despite a confusion matrix containing 36 errors. Direct recomputation resolved the issue. Metric outputs must always be checked against TN, FP, FN, and TP before being recorded.
+- DenseNet121 does not show clear overfitting in its learning curves: training and validation loss both decreased through the best epoch. High validation scores still require caution because patient-level separation has not been established.
+- The next experiment should be model comparison and one-time official-test evaluation, not immediate fine-tuning.
+
 ## Entry template
 
 - Observation:
