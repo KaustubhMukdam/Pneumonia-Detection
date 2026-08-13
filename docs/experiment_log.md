@@ -67,6 +67,17 @@ Append one entry per material run. Do not overwrite old results.
 - Reporting correction: the initial summary incorrectly displayed several metrics as 1.00 despite reporting 36 validation errors. The metrics above were recomputed directly from the validation labels, probabilities, threshold, and confusion matrix.
 - Next decision: compare the three models on validation results only, then select one candidate and one threshold before performing a single official-test evaluation.
 
+## Run 005 - Frozen DenseNet121 official test evaluation (2026-08-13)
+
+- Selection basis: DenseNet121 was selected using validation results only after comparison with the custom CNN and frozen EfficientNetB0. Its policy-selected threshold was 0.67, the highest tested threshold retaining validation sensitivity of at least 95%.
+- Test protocol: the untouched official 624-image test split was evaluated once at threshold 0.67. No threshold adjustment was made after viewing test results.
+- Test result: accuracy 0.8574, precision 0.8352, sensitivity 0.9615, specificity 0.6838, F1 0.8939, ROC-AUC 0.9522; TN 160, FP 74, FN 15, TP 375.
+- Interpretation: the model retained strong pneumonia sensitivity and missed 15 of 390 pneumonia images. Its main weakness was false-positive classification of 74 of 234 NORMAL images.
+- Generalization: compared with validation at the same threshold, test accuracy decreased from 95.15% to 85.74%, specificity from 95.52% to 68.38%, and ROC-AUC from 98.58% to 95.22%; sensitivity increased slightly from 95.03% to 96.15%. This indicates a meaningful validation-to-test distribution or calibration gap, not proof of complete overfitting.
+- Comparison: the DenseNet121 test result is stronger than the custom CNN's recorded threshold-0.65 test result, but that comparison is not perfectly clean because the baseline test split had been inspected at threshold 0.50 before its threshold-0.65 result was recorded.
+- Limitation: the dataset does not establish patient-level separation, and the official test contains six exact duplicate pairs. This is an educational image-classification result, not clinical validation.
+- Next decision: close Phase 4. Move to Phase 5 error analysis and Grad-CAM. Fine-tuning is not automatic; it requires a specific hypothesis supported by error analysis.
+
 ## Run template
 
 ### Run ID / date

@@ -28,6 +28,14 @@
 - DenseNet121 does not show clear overfitting in its learning curves: training and validation loss both decreased through the best epoch. High validation scores still require caution because patient-level separation has not been established.
 - The next experiment should be model comparison and one-time official-test evaluation, not immediate fine-tuning.
 
+## 2026-08-13 - Frozen DenseNet121 official test evaluation
+
+- Selecting a threshold on validation data and applying it once to test preserved the evaluation protocol: threshold 0.67 achieved 96.15% sensitivity and 68.38% specificity on test.
+- Validation performance overstated normal-class discrimination: specificity fell from 95.52% on validation to 68.38% on test, while sensitivity remained high. This is a generalization/calibration warning, not sufficient evidence by itself to diagnose overfitting.
+- Confusion matrices are more informative than accuracy alone: the test model missed 15 pneumonia images but produced 74 false alarms among normal images.
+- DenseNet121 is a stronger current candidate than the custom CNN on the recorded test metrics, but the comparison must mention that the baseline test result was not fully blinded during threshold analysis.
+- Fine-tuning should not be started merely because the test score is imperfect. First inspect false positives, false negatives, and Grad-CAM visualizations to define a defensible hypothesis.
+
 ## Entry template
 
 - Observation:

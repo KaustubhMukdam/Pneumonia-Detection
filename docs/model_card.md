@@ -2,7 +2,7 @@
 
 ## Model status
 
-The custom-CNN baseline has been trained and evaluated. Frozen EfficientNetB0 and frozen DenseNet121 have been trained under the same validation protocol. DenseNet121 is currently the leading validation candidate, but no transfer-learning model has been evaluated on the official test split and no final v2 model has been selected.
+The custom-CNN baseline has been trained and evaluated. Frozen EfficientNetB0 and frozen DenseNet121 were trained under the same validation protocol. Frozen DenseNet121 was selected using validation results and evaluated once on the official test split at threshold 0.67. It is the current v2 study candidate, not a clinically validated model.
 
 ## Intended use
 
@@ -43,9 +43,23 @@ The project uses a public Kaggle chest-X-ray dataset with `NORMAL` and `PNEUMONI
 - Policy-selected validation threshold 0.67: sensitivity 95.03%, specificity 95.52%, precision 98.40%, F1-score 96.68%; TN 192, FP 9, FN 29, TP 554.
 - Threshold 0.67 follows the existing rule of selecting the highest tested threshold that retains sensitivity of at least 95%. Threshold 0.50 remains a documented alternative with fewer false negatives.
 
+## Selected DenseNet121 official test result
+
+- Test split: official 624-image test split; `PNEUMONIA` is the positive class.
+- Decision threshold: 0.67, selected before test evaluation from validation data.
+- Accuracy: 85.74%
+- Precision: 83.52%
+- Sensitivity: 96.15%
+- Specificity: 68.38%
+- F1-score: 89.39%
+- ROC-AUC: 95.22%
+- Confusion matrix counts: TN 160, FP 74, FN 15, TP 375.
+
+The result indicates strong pneumonia sensitivity but weaker normal-class specificity than validation suggested. The model classified 74 NORMAL images as PNEUMONIA and missed 15 PNEUMONIA images.
+
 ## Known limitations
 
-The custom CNN overfit after its best validation epoch. Frozen EfficientNetB0 did not show the same pattern, but its high validation scores may still be optimistic because the project has not verified patient-level separation. The official test set includes six exact duplicate pairs. Grad-CAM is not yet implemented and no external validation exists.
+The custom CNN overfit after its best validation epoch. Frozen DenseNet121 did not show clear curve-based overfitting, but its validation performance was optimistic relative to test specificity. The project has not verified patient-level separation. The official test set includes six exact duplicate pairs. Grad-CAM is not yet implemented and no external validation exists.
 
 ## Baseline test metrics
 
@@ -63,6 +77,6 @@ The threshold came from validation data, but the test split had already been ins
 
 ## Transfer-learning evaluation status
 
-No official test metrics are recorded for EfficientNetB0 or DenseNet121. Their validation results are for candidate comparison only and must not be presented as final performance.
+DenseNet121 has completed its single pre-specified official-test evaluation. EfficientNetB0 has no official test evaluation because it was not selected. Validation results for both candidates remain useful for comparison, but must not be presented as final performance.
 
 The initial DenseNet report contained impossible perfect metrics despite a confusion matrix with 36 errors. Those values were discarded and recomputed directly from validation probabilities and labels.
