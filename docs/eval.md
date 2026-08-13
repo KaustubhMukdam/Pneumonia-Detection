@@ -33,7 +33,7 @@ For DenseNet121, the verified validation operating points are:
 - Threshold 0.50: sensitivity 96.91%, specificity 91.04%, precision 96.91%, F1 96.91%, FN 18, FP 18.
 - Threshold 0.67: sensitivity 95.03%, specificity 95.52%, precision 98.40%, F1 96.68%, FN 29, FP 9.
 
-Under the current policy, threshold 0.67 is the policy-selected DenseNet121 threshold because it is the highest tested threshold retaining sensitivity of at least 95%. Threshold 0.50 remains an explicitly reported alternative with fewer false negatives. The final model and threshold must be selected before the official test is opened.
+Under the current policy, threshold 0.67 is the policy-selected DenseNet121 threshold because it is the highest tested threshold retaining sensitivity of at least 95%. Threshold 0.50 remains an explicitly reported alternative with fewer false negatives. The final model and threshold were selected before the official test was opened.
 
 ## Selection policy
 
@@ -48,3 +48,17 @@ The best model is not automatically the one with the highest accuracy. We will c
 | DenseNet121 frozen | 0.9858 | threshold 0.67 | 95.03% | 95.52% | 96.68% |
 
 This table is for validation-based selection only. It does not establish which model will generalize best to the untouched official test split.
+
+## Selected-model test result
+
+Frozen DenseNet121 was selected and evaluated once on the official test split at the pre-selected threshold of 0.67:
+
+- Accuracy: 85.74%
+- Precision: 83.52%
+- Sensitivity: 96.15%
+- Specificity: 68.38%
+- F1-score: 89.39%
+- ROC-AUC: 95.22%
+- Confusion matrix: TN 160, FP 74, FN 15, TP 375
+
+The model retained high pneumonia sensitivity but showed a substantial specificity decline from validation (95.52%) to test (68.38%). The result is reported as an educational benchmark and not as evidence of clinical readiness.

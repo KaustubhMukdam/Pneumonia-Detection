@@ -31,14 +31,14 @@
 - [x] Add the EfficientNetB0 notebook and record validation-only findings.
 - [x] Train DenseNet121 with a frozen ImageNet backbone.
 - [x] Verify DenseNet121 metrics after correcting the inconsistent first report.
-- [ ] Compare custom CNN, EfficientNetB0, and DenseNet121 using validation results only.
-- [ ] Select an operating threshold on validation data for the chosen transfer-learning model.
-- [ ] Evaluate only the chosen transfer-learning model once on the official test split.
+- [x] Compare custom CNN, EfficientNetB0, and DenseNet121 using validation results only.
+- [x] Select an operating threshold on validation data for the chosen transfer-learning model.
+- [x] Evaluate only the chosen transfer-learning model once on the official test split.
 - [ ] Fine-tune only with a documented hypothesis.
 
 ## Phase 5 - Analysis
 
-- [ ] Produce confusion matrices and threshold-aware metrics.
+- [x] Produce confusion matrices and threshold-aware metrics.
 - [ ] Review false positives and false negatives.
 - [ ] Add Grad-CAM examples.
 

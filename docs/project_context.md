@@ -24,4 +24,4 @@ The project should have reproducible data handling, a defensible validation prot
 
 ## Current focus
 
-Phase 4 transfer learning. Frozen EfficientNetB0 and DenseNet121 have been completed using the same duplicate-safe split and validation protocol. DenseNet121 is currently the leading validation candidate, but model and threshold selection must be finalized before the untouched official test split is evaluated.
+Phase 5 analysis. Phase 4 is complete: frozen DenseNet121 was selected from validation results and evaluated once on the official test split at threshold 0.67. The next work is false-positive/false-negative review and Grad-CAM, with no automatic fine-tuning.
