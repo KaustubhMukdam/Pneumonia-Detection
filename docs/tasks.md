@@ -39,8 +39,8 @@
 ## Phase 5 - Analysis
 
 - [x] Produce confusion matrices and threshold-aware metrics.
-- [ ] Review false positives and false negatives.
-- [ ] Add Grad-CAM examples.
+- [x] Review false positives and false negatives.
+- [x] Add Grad-CAM examples and document their limitations.
 
 ## Phase 6 - Finalization
 

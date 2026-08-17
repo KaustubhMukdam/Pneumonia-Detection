@@ -24,4 +24,4 @@ The project should have reproducible data handling, a defensible validation prot
 
 ## Current focus
 
-Phase 5 analysis. Phase 4 is complete: frozen DenseNet121 was selected from validation results and evaluated once on the official test split at threshold 0.67. The next work is false-positive/false-negative review and Grad-CAM, with no automatic fine-tuning.
+Phase 5 analysis is complete. Frozen DenseNet121 was selected from validation results and evaluated once on the official test split at threshold 0.67. Review found 74 false positives and 15 false negatives, and qualitative Grad-CAM examples were generated with explicit shortcut-learning and non-causality caveats. Fine-tuning is not automatic and, if pursued, must be justified and selected using training/validation data only.

@@ -78,6 +78,14 @@ Append one entry per material run. Do not overwrite old results.
 - Limitation: the dataset does not establish patient-level separation, and the official test contains six exact duplicate pairs. This is an educational image-classification result, not clinical validation.
 - Next decision: close Phase 4. Move to Phase 5 error analysis and Grad-CAM. Fine-tuning is not automatic; it requires a specific hypothesis supported by error analysis.
 
+## Run 006 - DenseNet121 test error analysis and Grad-CAM (2026-08-17)
+
+- Scope: post-evaluation analysis only. No model weights, threshold, or test predictions were changed.
+- Error table: at the pre-selected threshold of 0.67, TN 160, FP 74, FN 15, TP 375. False positives on NORMAL images are the principal observed error mode; false negatives remain important under the sensitivity-oriented policy.
+- Grad-CAM implementation: used DenseNet121's final convolutional layer, `conv5_block16_2_conv`. Gradients were taken from the pre-sigmoid pneumonia logit, not the sigmoid probability, to avoid gradient saturation. Correct-prediction groups were explicitly filtered as `True Positive` and `True Negative`.
+- Qualitative review: representative false positives, false negatives, and correct predictions were visualized. Some images contain borders, laterality markers, and acquisition context; some attention extends outside the lung fields. This is a shortcut-learning warning only, not proof of causality or clinical reasoning. A uniformly blue map is low or zero positive attribution after Grad-CAM processing and is not interpretable evidence.
+- Next decision: Phase 5 is complete. Do not revisit the official test set to choose changes. Any fine-tuning experiment must state a validation-only hypothesis, such as whether limited unfreezing of the final DenseNet block improves validation specificity while retaining sensitivity.
+
 ## Run template
 
 ### Run ID / date

@@ -59,7 +59,13 @@ The result indicates strong pneumonia sensitivity but weaker normal-class specif
 
 ## Known limitations
 
-The custom CNN overfit after its best validation epoch. Frozen DenseNet121 did not show clear curve-based overfitting, but its validation performance was optimistic relative to test specificity. The project has not verified patient-level separation. The official test set includes six exact duplicate pairs. Grad-CAM is not yet implemented and no external validation exists.
+The custom CNN overfit after its best validation epoch. Frozen DenseNet121 did not show clear curve-based overfitting, but its validation performance was optimistic relative to test specificity. The project has not verified patient-level separation. The official test set includes six exact duplicate pairs. No external validation exists.
+
+## Error analysis and visual explanations
+
+At the pre-selected test threshold, 74 NORMAL images were false positives and 15 PNEUMONIA images were false negatives. False positives are the dominant observed error mode and align with the test-specificity decline; this finding does not identify their cause.
+
+Grad-CAM examples were generated from `conv5_block16_2_conv` using the pre-sigmoid pneumonia logit. The maps are qualitative and may include attention outside the lung fields, including borders or laterality markers visible in some images. Such patterns are a reason for caution and further study, not proof of shortcut learning or causal model reasoning. Uniformly blue maps represent low or zero positive attribution after processing and are not interpretable evidence.
 
 ## Baseline test metrics
 

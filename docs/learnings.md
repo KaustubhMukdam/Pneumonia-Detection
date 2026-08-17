@@ -36,6 +36,13 @@
 - DenseNet121 is a stronger current candidate than the custom CNN on the recorded test metrics, but the comparison must mention that the baseline test result was not fully blinded during threshold analysis.
 - Fine-tuning should not be started merely because the test score is imperfect. First inspect false positives, false negatives, and Grad-CAM visualizations to define a defensible hypothesis.
 
+## 2026-08-17 - Phase 5 error analysis and Grad-CAM
+
+- At the pre-selected threshold of 0.67, false positives are the dominant test error: 74 NORMAL images were predicted as PNEUMONIA, compared with 15 PNEUMONIA images predicted as NORMAL. This describes the error distribution; it does not establish why the errors occurred.
+- Grad-CAM should use the pre-sigmoid logit rather than the post-sigmoid probability. The corrected implementation produces attributions from DenseNet121's `conv5_block16_2_conv` and avoids saturated sigmoid gradients.
+- Grad-CAM maps that extend to borders, laterality markers, or other non-lung context are a shortcut-learning warning. They do not prove that a specific artifact drove a prediction, and uniformly blue maps are low- or zero-positive-attribution visualizations rather than meaningful negative evidence.
+- The observed specificity gap supports investigating a validation-only hypothesis about dataset-image characteristics or calibration, but it does not authorize tuning against the already-viewed official test set.
+
 ## Entry template
 
 - Observation:

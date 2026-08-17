@@ -62,3 +62,11 @@ Frozen DenseNet121 was selected and evaluated once on the official test split at
 - Confusion matrix: TN 160, FP 74, FN 15, TP 375
 
 The model retained high pneumonia sensitivity but showed a substantial specificity decline from validation (95.52%) to test (68.38%). The result is reported as an educational benchmark and not as evidence of clinical readiness.
+
+## Phase 5 error analysis and Grad-CAM
+
+The test prediction table at the pre-selected threshold of 0.67 was reviewed. It contains 160 true negatives, 74 false positives, 15 false negatives, and 375 true positives. The largest error mode is therefore false-positive pneumonia predictions on NORMAL images (74 of 234 NORMAL images); this is consistent with the observed test-specificity decline. The false negatives are fewer (15 of 390 PNEUMONIA images), but remain consequential for the study's sensitivity-oriented operating policy.
+
+Representative false-positive, false-negative, and correct-prediction examples were visualized with Grad-CAM from DenseNet121 layer `conv5_block16_2_conv`. The implementation targets the pre-sigmoid pneumonia logit, avoiding the saturated sigmoid-gradient failure that produced uniformly blue maps in the earlier version. Some reviewed examples contain image borders, laterality markers, or acquisition context, and some maps extend beyond the lung fields. These are shortcut-learning warnings, not evidence that any one artifact caused a prediction. A fully blue map denotes low or zero positive attribution after Grad-CAM's ReLU/normalization step and is uninformative; it must not be interpreted as clinical evidence.
+
+Grad-CAM is a qualitative localization aid only. It does not prove causality, establish clinical reasoning, or validate the model for use on patients.
