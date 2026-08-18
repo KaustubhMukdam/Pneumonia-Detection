@@ -1,4 +1,4 @@
-# Model Card - Initial Draft
+# Model Card
 
 ## Model status
 

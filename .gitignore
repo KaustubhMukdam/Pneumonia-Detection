@@ -36,3 +36,5 @@ Thumbs.db
 # Personal/local-only notes
 docs/opencode.md
 docs/dev_system_guide.md
+
+results/*.png
