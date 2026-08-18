@@ -44,6 +44,6 @@
 
 ## Phase 6 - Finalization
 
-- [ ] Complete model card and README.
+- [x] Complete model card and README.
 - [ ] Export reproducible results.
-- [ ] Review claims for medical overstatement.
+- [x] Review claims for medical overstatement.

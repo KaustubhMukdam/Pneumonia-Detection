@@ -1,138 +1,68 @@
-# Automated Pneumonia Detection from Chest X-Rays using Deep Learning
+# Pneumonia Detection v2
 
-*A Comparative Study of CNN Architectures for Medical Image Classification*
+An educational computer-vision portfolio project that compares a custom CNN with frozen ImageNet-pretrained transfer-learning models for binary chest-X-ray classification. It is **not** a clinical diagnostic, triage, or treatment system.
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## What this study does
 
-## Overview
+- Audits the public Kaggle Chest X-Ray Images (Pneumonia) dataset before modelling.
+- Creates a deterministic, duplicate-safe, stratified validation split from the training data.
+- Compares a custom CNN baseline, frozen EfficientNetB0, and frozen DenseNet121 using validation data.
+- Selects a decision threshold before one official-test evaluation.
+- Reports threshold-aware metrics, error counts, and qualitative Grad-CAM examples alongside limitations.
 
-This project implements and compares three deep learning models for automated pneumonia detection from chest X-ray images. The models include a simple CNN baseline, a regularized CNN with dropout, and a transfer learning approach using VGG16. The VGG16 model achieved the highest test accuracy of 85.90%.
+## Dataset and protocol
 
-The project demonstrates the application of computer vision techniques in medical imaging, providing insights into model architectures suitable for diagnostic tasks.
+The project uses the [Kaggle Chest X-Ray Images (Pneumonia) dataset](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia) by Paul Mooney. The verified audit contains 5,856 readable images: 5,216 train, 16 supplied validation, and 624 official-test images. `PNEUMONIA` is the positive class.
 
-## Dataset
+The supplied validation split is too small for model selection, so the project creates a seed-42, duplicate-safe stratified split from training data: 4,432 training images and 784 validation images. The official test set was not used to select the model or threshold. Patient-level separation has not been verified, and the official test set contains six exact duplicate pairs.
 
-**Source:** [Kaggle - Chest X-Ray Images (Paul Mooney)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia)
+See [data documentation](docs/data_doc.md) and the [evaluation plan](docs/eval.md) for the complete protocol.
 
-**Composition:**
-- Total Images: 5,863 X-ray images in JPEG format
-- Organization: Three folders (Train, Test, Val) with two subfolders per category (Pneumonia/Normal)
-- Image Type: Grayscale chest X-rays
+## Current v2 result
 
-**Preprocessing:**
-- Normalization: Pixel values rescaled to [0, 1]
-- Data Augmentation: Random rotation, zoom, shearing, and horizontal flip for training data
-- Image Resizing: All images standardized to 150 × 150 pixels
+Frozen DenseNet121 was selected using validation results and evaluated once on the official test split at the pre-selected threshold of 0.67.
 
-## Prerequisites
+| Metric | Official-test result |
+|---|---:|
+| Accuracy | 85.74% |
+| Precision | 83.52% |
+| Sensitivity / recall | 96.15% |
+| Specificity | 68.38% |
+| F1-score | 89.39% |
+| ROC-AUC | 95.22% |
+| Confusion matrix | TN 160, FP 74, FN 15, TP 375 |
 
-- Python 3.11+
-- TensorFlow 2.x
-- Keras
-- NumPy
-- Matplotlib
-- scikit-learn
-- Jupyter Notebook
+The model retained high pneumonia sensitivity, but specificity fell substantially from 95.52% on validation to 68.38% on the official test split. The principal observed test error was false-positive pneumonia prediction: 74 NORMAL images were classified as PNEUMONIA, while 15 PNEUMONIA images were classified as NORMAL. This is a dataset-specific educational result, not evidence of clinical readiness.
 
-## Installation
+## Notebooks
 
-1. Clone this repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-directory>
-   ```
+| Notebook | Purpose |
+|---|---|
+| [01_dataset_audit.md](notebooks/01_dataset_audit.md) | Dataset structure, image, and duplicate audit instructions |
+| [02_baseline_cnn.ipynb](notebooks/02_baseline_cnn.ipynb) | Custom-CNN baseline |
+| [03_efficientnetb0_frozen.ipynb](notebooks/03_efficientnetb0_frozen.ipynb) | Frozen EfficientNetB0 candidate |
+| [04-densenet121-frozen.ipynb](notebooks/04-densenet121-frozen.ipynb) | Frozen DenseNet121 training and validation selection |
+| [04-densenet121-evaluation.ipynb](notebooks/04-densenet121-evaluation.ipynb) | One-time official-test evaluation |
+| [05-error-analysis.ipynb](notebooks/05-error-analysis.ipynb) | Test-error review and Grad-CAM |
 
-2. Install required packages:
-   ```bash
-   pip install tensorflow keras numpy matplotlib scikit-learn jupyter
-   ```
+The legacy implementation and its historical accuracy-only results are retained in [`legacy/`](legacy/) for context. They are not the v2 benchmark.
 
-3. Download the dataset from Kaggle and place it in the project directory as `chest_xray/` folder.
+## Reproducing the study
 
-## Usage
+1. Create a Kaggle Notebook with GPU enabled and attach the Kaggle dataset above.
+2. Run the notebooks in numerical order. The transfer-learning notebooks use TensorFlow/Keras, NumPy, pandas, Matplotlib, seaborn, and scikit-learn.
+3. Do not change the official-test threshold after viewing test results. For the selected DenseNet121 candidate, use the already selected threshold of 0.67 only for the recorded test evaluation.
+4. Treat any later model change, including fine-tuning, as a new validation-only experiment. Do not use the already-viewed official test set to select it.
 
-1. Open the Jupyter notebook:
-   ```bash
-   jupyter notebook x_ray.ipynb
-   ```
+## Limits and responsible use
 
-2. Update the `BASE_DIR` path in the configuration section if needed:
-   ```python
-   BASE_DIR = './chest_xray/'  # Update this path to where you unzipped the dataset
-   ```
+- No external validation, patient-level split verification, demographic analysis, or clinical evaluation has been performed.
+- Dataset labels and acquisition context may not generalize to other sites, hardware, populations, or clinical workflows.
+- Grad-CAM is qualitative. Attention outside lung fields, image borders, or laterality markers is a shortcut-learning warning, not proof of why the model predicted a class. A fully blue Grad-CAM map is low or zero positive attribution after processing, not clinical evidence.
+- The project must not be used for diagnosis, triage, treatment decisions, or unsupervised clinical use.
 
-3. Run the notebook cells sequentially to:
-   - Load and preprocess the data
-   - Train the three models
-   - Evaluate performance on the test set
-
-## Model Architectures
-
-### Model 1: Simple CNN (Baseline)
-- Two convolutional blocks with max-pooling
-- Dense layers for classification
-- **Test Accuracy:** 82.37%
-
-### Model 2: CNN with Dropout
-- Three convolutional blocks with max-pooling
-- Dropout layer (rate: 0.5) for regularization
-- **Test Accuracy:** 80.77%
-
-### Model 3: VGG16 Transfer Learning
-- Pre-trained VGG16 base (frozen weights)
-- Custom dense classifier on top
-- **Test Accuracy:** 85.90% (Best performer)
-
-## Results Summary
-
-| Model | Architecture Type | Test Accuracy | Test Loss |
-|-------|------------------|---------------|-----------|
-| Model 1 | Simple CNN | 82.37% | 0.3949 |
-| Model 2 | CNN + Dropout | 80.77% | 0.4488 |
-| Model 3 | VGG16 Transfer | **85.90%** | 0.3970 |
-
-The VGG16 transfer learning model outperformed the custom architectures, demonstrating the effectiveness of leveraging pre-trained features for medical imaging tasks with limited labeled data.
-
-## Project Structure
-
-```
-├── report.md               # Markdown version of the report
-├── x_ray.ipynb             # Main Jupyter notebook with code
-├── chest_xray/             # Dataset directory
-│   ├── train/
-│   ├── test/
-│   └── val/
-├── image_1.png             # Training curves for Model 1
-├── image_2.png             # Training curves for Model 2
-├── image_3.png             # Training curves for Model 3
-└── .gitignore              # ignore dataset and extra files
-```
-
-## Key Findings
-
-- **Transfer Learning Superiority:** Pre-trained models significantly outperform custom architectures for medical imaging
-- **Regularization Trade-offs:** Dropout helps prevent overfitting but may require more training epochs
-- **Clinical Potential:** 85.90% accuracy shows promise for automated screening, though human oversight remains essential
-
-For detailed analysis, training dynamics, and future recommendations, see the [full report](report.html).
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+For detailed caveats and experiment history, read the [model card](docs/model_card.md), [experiment log](docs/experiment_log.md), and [learnings](docs/learnings.md).
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Citation
-
-If you use this work in your research, please cite:
-
-```
-Automated Pneumonia Detection from Chest X-Rays using Deep Learning
-A Comparative Study of CNN Architectures for Medical Image Classification
-```
-
-## Contact
-
-For questions or feedback, please open an issue in this repository.
+This repository is licensed under the [MIT License](LICENSE). Dataset rights are separate; consult the dataset page and original-source attribution before any reuse.
